@@ -18,7 +18,11 @@ usefull because the head sensor occasionally gives low readings resulting in non
 * 3.3V pullup on head side.
 * UART: 9600bps 8bit no parity LSB first.
 
+![schematic](./res/braun-silk-expert-pro-mod-schematics.png)
+
 ## Powerup Sequence:
+![schematic](./res/braun-silk-expert-pro-mod-sniff.png)
+
 ##### 1. Head sends a `get_model()` packet (try 4 times, 500ms reply timeout, afterward goes to #5):
 `2C,D3,00,07,25,2C,5F`
 * src(`2C`) request(`D3`) get_model(`00`) + size(`07`) + dest(`25`) + fletcher16(`2C,5F`)
@@ -65,6 +69,11 @@ usefull because the head sensor occasionally gives low readings resulting in non
 | 08 | 8930 | 8800 |
 | 09 | 9542 | 9400 |
 | 10 | 10154 | 10000 |
+
+## The mod hardware:
+![schematic](./res/mod-inserted.jpg)
+![schematic](./res/mod-bottom.jpg)
+![schematic](./res/mod-top.jpg)
 
 ### Packet Test and Generate Code:
 ```python
