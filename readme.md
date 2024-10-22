@@ -42,20 +42,26 @@ usefull because the head sensor occasionally gives low readings resulting in non
 ##### 5. Head sends a `sensor_read()` packet every 107ms:
 `2C,D3,24,1A,25,#0,00,00,00,#1,00,64,64,#2,#3,0D,#4,#5,#6,#7,#8,#9,#a,#b,#c,#d`
 * src(`2C`) request(`D3`) sensor_read(`24`) + size(`1A`) + dest(`25`) + params(..) + fletcher16(`#b,#c`)
-###### This is a 26 bytes packet, some params are fixed, here are the known params:
-`#0` = laser power - see calculation below (0=off 1..10=low to high)
-`#1` = head type (02=standard, 22=small)
-`#2` = `max(9, 10 - #0)`
-`#3` = `#2 + 4`
-`#4,#5` = left color tone (LSB,MSB higher=brighter)
-`#6,#7` = right color tone (LSB,MSB higher=brighter)
-`#8` = left skin proximity (0..49=non contact, jumps to 180..255=skin contact)
-`#9` = right skin proximity (0..49=non contact, jumps to 180..255=skin contact)
-`#a,#b` = temperature (LSB,MSB units of 0.1°C)
-`#c,#d` = `fletcher16(packet[:-2])`
-###### Laser power calculation:
+* This is a 26 bytes packet, some params are fixed, here are the known params:
+
+| Param | Description |
+| ------- | ------- |
+| `#0` | laser power - see calculation below (0=off 1..10=low to high) |
+| `#1` | head type (02=standard, 22=small) |
+| `#2` | `max(9, 10 - #0)` |
+| `#3` | `#2 + 4` |
+| `#4,#5` | left color tone (LSB,MSB higher=brighter) |
+| `#6,#7` | right color tone (LSB,MSB higher=brighter) |
+| `#8` | left skin proximity (0..49=non contact, jumps to 180..255=skin contact) |
+| `#9` | right skin proximity (0..49=non contact, jumps to 180..255=skin contact) |
+| `#a,#b` | temperature (LSB,MSB units of 0.1°C) | |
+| `#c,#d` | `fletcher16(packet[:-2])` |
+
+* Laser power calculation:
+
 `#0` = `0 if min(#8, #9) < 180 else max(min(#45, #67) - 4600, 0) // 600`
-###### Based on threshold level rounding of sniffed packets:
+
+* Based on threshold level rounding of sniffed packets:
 
 | `#0` | `min(#45, #67)` | `rounding` |
 | ------- | ------- | ------- |
@@ -128,7 +134,7 @@ test_packet_checksum()
 generate_sensor_read_packets()
 ```
 
-### Sniffed sensor_read() Packets:
+### Sniffed `sensor_read()` Packets:
 ```
 Standard Idle:
 2C,D3,24,1A,25,00,00,00,00,02,00,64,64,09,0D,0D,00,00,28,00,00,00,FD,00,77,86
